@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RoomManagement.Api.Database;
@@ -10,7 +9,7 @@ using RoomManagement.Api.Database;
 namespace RoomManagement.Api.Migrations
 {
     [DbContext(typeof(RoomManagementContext))]
-    [Migration("20190514175539_Initial")]
+    [Migration("20190514191822_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,14 +17,12 @@ namespace RoomManagement.Api.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("RoomManagement.Api.Models.Domain.Event", b =>
                 {
                     b.Property<int>("EventId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description")
                         .IsRequired();
@@ -45,8 +42,7 @@ namespace RoomManagement.Api.Migrations
             modelBuilder.Entity("RoomManagement.Api.Models.Domain.Reservation", b =>
                 {
                     b.Property<int>("ReservationId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("End");
 
@@ -68,8 +64,7 @@ namespace RoomManagement.Api.Migrations
             modelBuilder.Entity("RoomManagement.Api.Models.Domain.Room", b =>
                 {
                     b.Property<int>("RoomId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description")
                         .IsRequired();

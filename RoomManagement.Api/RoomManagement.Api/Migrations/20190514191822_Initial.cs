@@ -13,7 +13,7 @@ namespace RoomManagement.Api.Migrations
                 columns: table => new
                 {
                     EventId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(maxLength: 45, nullable: false),
                     Description = table.Column<string>(nullable: false),
                     Organizer = table.Column<string>(nullable: false)
@@ -28,7 +28,7 @@ namespace RoomManagement.Api.Migrations
                 columns: table => new
                 {
                     RoomId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 45, nullable: false),
                     Description = table.Column<string>(nullable: false)
                 },
@@ -42,7 +42,7 @@ namespace RoomManagement.Api.Migrations
                 columns: table => new
                 {
                     ReservationId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     EventId = table.Column<int>(nullable: false),
                     RoomId = table.Column<int>(nullable: false),
                     Start = table.Column<DateTime>(nullable: false),
