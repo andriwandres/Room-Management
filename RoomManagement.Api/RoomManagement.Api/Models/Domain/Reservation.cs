@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RoomManagement.Api.Models
+namespace RoomManagement.Api.Models.Domain
 {
     public class Reservation
     {
@@ -19,11 +19,8 @@ namespace RoomManagement.Api.Models
         [Required]
         public DateTime End { get; set; }
 
-
-        [ForeignKey(nameof(EventId))]
         public Event Event { get; set; }
 
-        [ForeignKey(nameof(RoomId))]
         public Room Room { get; set; }
     }
 }

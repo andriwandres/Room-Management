@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RoomManagement.Api.Models
+namespace RoomManagement.Api.Models.Domain
 {
     public class Room
     {
@@ -8,6 +8,7 @@ namespace RoomManagement.Api.Models
         public int RoomId { get; set; }
 
         [Required]
+        [StringLength(45)]
         public string Name { get; set; }
 
         [Required]

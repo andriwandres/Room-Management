@@ -1,164 +1,165 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RoomManagement.Api.Database;
 using RoomManagement.Api.Models.Domain;
 using RoomManagement.Api.Models.DTOs;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace RoomManagement.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class EventController : ControllerBase
+    public class ReservationController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly RoomManagementContext _context;
 
-        public EventController(RoomManagementContext context, IMapper mapper)
+        public ReservationController(RoomManagementContext context, IMapper mapper)
         {
             _mapper = mapper;
             _context = context;
         }
 
         [HttpGet]
-        [Route("getEvents")]
+        [Route("getReservations")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Event>> GetEvents()
+        public ActionResult<IEnumerable<Reservation>> GetReservations()
         {
-            IEnumerable<Event> events = _context.Events;
+            IEnumerable<Reservation> reservations = _context.Reservations;
 
-            return Ok(events);
+            return Ok(reservations);
         }
-
+        
         [HttpGet]
-        [Route("getEvent/{id:int}")]
+        [Route("getReservation/{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Event>> GetEventById([FromRoute] int id)
+        public async Task<ActionResult<Reservation>> GetReservationById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Event @event = await _context.Events.FindAsync(id);
+            Reservation reservation = await _context.Reservations.FindAsync(id);
 
-            if (@event == null)
+            if (reservation == null)
             {
                 return NotFound();
             }
 
-            return Ok(@event);
+            return Ok(reservation);
         }
 
         [HttpPost]
-        [Route("createEvent")]
+        [Route("createReservation")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Event>> CreateEvent([FromBody] EventDto eventDto)
+        public async Task<ActionResult<Reservation>> CreateReservation([FromBody] ReservationDto reservationDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Event @event = _mapper.Map<Event>(eventDto);
-            
-            await _context.Events.AddAsync(@event);
+            Reservation reservation = _mapper.Map<Reservation>(reservationDto);
+
+            await _context.Reservations.AddAsync(reservation);
             await _context.SaveChangesAsync();
 
-            return Created(nameof(CreateEvent), @event);
+            return Created(nameof(CreateReservation), reservation);
         }
 
         [HttpPut]
-        [Route("updateEvent/{id:int}")]
+        [Route("updateReservation/{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Event>> UpdateEventById([FromRoute] int id, [FromBody] EventDto eventDto)
+        public async Task<ActionResult<Reservation>> UpdateReservationById([FromRoute] int id, [FromBody] ReservationDto reservationDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Event @event = await _context.Events.FindAsync(id);
+            Reservation reservation = await _context.Reservations.FindAsync(id);
 
-            if (@event == null)
+            if (reservation == null)
             {
                 return NotFound();
             }
 
-            @event.Title = eventDto.Title;
-            @event.Description = eventDto.Description;
-            @event.Organizer = eventDto.Organizer;
+            reservation.EventId = reservationDto.EventId;
+            reservation.RoomId = reservationDto.RoomId;
+            reservation.Start = reservationDto.Start;
+            reservation.End = reservationDto.End;
 
-            _context.Events.Update(@event);
+            _context.Reservations.Update(reservation);
             await _context.SaveChangesAsync();
 
-            return Ok(@event);
+            return Ok(reservation);
         }
 
         [HttpPatch]
-        [Route("patchEvent/{id:int}")]
+        [Route("patchReservation/{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Event>> PatchEventById([FromRoute] int id, [FromBody] JsonPatchDocument<EventDto> patchDocument)
+        public async Task<ActionResult<Reservation>> PatchReservationById([FromRoute] int id, [FromBody] JsonPatchDocument<ReservationDto> patchDocument)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Event @event = await _context.Events.FindAsync(id);
+            Reservation reservation = await _context.Reservations.FindAsync(id);
 
-            if (@event == null)
+            if (reservation == null)
             {
                 return NotFound();
             }
 
-            EventDto eventDto = _mapper.Map<EventDto>(@event);
+            ReservationDto reservationDto = _mapper.Map<ReservationDto>(reservation);
 
-            patchDocument.ApplyTo(eventDto, ModelState);
+            patchDocument.ApplyTo(reservationDto, ModelState);
 
-            if (TryValidateModel(@event))
+            if (TryValidateModel(reservation))
             {
                 return BadRequest(ModelState);
             }
 
-            _mapper.Map(eventDto, @event);
+            _mapper.Map(reservationDto, reservation);
 
             await _context.SaveChangesAsync();
 
-            return Ok(@event);
+            return Ok(reservation);
         }
 
         [HttpDelete]
-        [Route("deleteEvent/{id:int}")]
+        [Route("deleteReservation/{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteEventById([FromRoute] int id)
+        public async Task<ActionResult> DeleteReservationById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Event @event = await _context.Events.FindAsync(id);
+            Reservation reservation = await _context.Reservations.FindAsync(id);
 
-            if (@event == null)
+            if (reservation == null)
             {
                 return NotFound();
             }
 
-            _context.Events.Remove(@event);
+            _context.Reservations.Remove(reservation);
             await _context.SaveChangesAsync();
 
             return NoContent();

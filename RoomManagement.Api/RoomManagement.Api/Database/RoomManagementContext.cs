@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RoomManagement.Api.Models;
+using RoomManagement.Api.Models.Domain;
 
 namespace RoomManagement.Api.Database
 {

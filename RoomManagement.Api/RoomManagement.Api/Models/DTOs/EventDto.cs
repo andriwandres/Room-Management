@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RoomManagement.Api.Models
+namespace RoomManagement.Api.Models.DTOs
 {
-    public class Event
+    public class EventDto
     {
-        [Key]
-        public int EventId { get; set; }
-
         [Required]
         public string Title { get; set; }
 
