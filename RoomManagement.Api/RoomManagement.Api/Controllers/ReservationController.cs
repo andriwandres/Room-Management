@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -80,7 +81,7 @@ namespace RoomManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Reservation>> UpdateReservationById([FromRoute] int id, [FromBody] ReservationDto reservationDto)
+        public async Task<ActionResult<Reservation>> UpdateReservation([FromRoute] int id, [FromBody] ReservationDto reservationDto)
         {
             if (!ModelState.IsValid)
             {
@@ -110,7 +111,7 @@ namespace RoomManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Reservation>> PatchReservationById([FromRoute] int id, [FromBody] JsonPatchDocument<ReservationDto> patchDocument)
+        public async Task<ActionResult<Reservation>> PatchReservation([FromRoute] int id, [FromBody] JsonPatchDocument<ReservationDto> patchDocument)
         {
             if (!ModelState.IsValid)
             {
@@ -123,14 +124,24 @@ namespace RoomManagement.Api.Controllers
             {
                 return NotFound();
             }
-
+            
             ReservationDto reservationDto = _mapper.Map<ReservationDto>(reservation);
 
             patchDocument.ApplyTo(reservationDto, ModelState);
 
-            if (TryValidateModel(reservation))
+            TryValidateModel(reservation);
+
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            Room room = await _context.Rooms.FindAsync(reservation.RoomId);
+            Event @event = await _context.Events.FindAsync(reservation.EventId);
+
+            if (room == null && @event == null)
+            {
+                return BadRequest();
             }
 
             _mapper.Map(reservationDto, reservation);
@@ -145,7 +156,7 @@ namespace RoomManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteReservationById([FromRoute] int id)
+        public async Task<ActionResult> DeleteReservation([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {

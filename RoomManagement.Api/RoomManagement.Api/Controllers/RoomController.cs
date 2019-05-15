@@ -80,7 +80,7 @@ namespace RoomManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Room>> UpdateRoomById([FromRoute] int id, [FromBody] RoomDto roomDto)
+        public async Task<ActionResult<Room>> UpdateRoom([FromRoute] int id, [FromBody] RoomDto roomDto)
         {
             if (!ModelState.IsValid)
             {
@@ -108,7 +108,7 @@ namespace RoomManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Room>> PatchRoomById([FromRoute] int id, [FromBody] JsonPatchDocument<RoomDto> patchDocument)
+        public async Task<ActionResult<Room>> PatchRoom([FromRoute] int id, [FromBody] JsonPatchDocument<RoomDto> patchDocument)
         {
             if (!ModelState.IsValid)
             {
@@ -126,7 +126,9 @@ namespace RoomManagement.Api.Controllers
 
             patchDocument.ApplyTo(roomDto, ModelState);
 
-            if (TryValidateModel(room))
+            TryValidateModel(room);
+
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -143,7 +145,7 @@ namespace RoomManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteRoomById([FromRoute] int id)
+        public async Task<ActionResult> DeleteRoom([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {

@@ -80,7 +80,7 @@ namespace RoomManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Event>> UpdateEventById([FromRoute] int id, [FromBody] EventDto eventDto)
+        public async Task<ActionResult<Event>> UpdateEvent([FromRoute] int id, [FromBody] EventDto eventDto)
         {
             if (!ModelState.IsValid)
             {
@@ -109,7 +109,7 @@ namespace RoomManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Event>> PatchEventById([FromRoute] int id, [FromBody] JsonPatchDocument<EventDto> patchDocument)
+        public async Task<ActionResult<Event>> PatchEvent([FromRoute] int id, [FromBody] JsonPatchDocument<EventDto> patchDocument)
         {
             if (!ModelState.IsValid)
             {
@@ -127,7 +127,9 @@ namespace RoomManagement.Api.Controllers
 
             patchDocument.ApplyTo(eventDto, ModelState);
 
-            if (TryValidateModel(@event))
+            TryValidateModel(@event);
+
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -144,7 +146,7 @@ namespace RoomManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteEventById([FromRoute] int id)
+        public async Task<ActionResult> DeleteEvent([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {

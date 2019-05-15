@@ -63,6 +63,7 @@ namespace RoomManagement.Api
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Room Management API");
             });
 
+            // TODO Configure more precisely
             // Configure Cross Origin Resource Sharing (CORS)
             app.UseCors(policy => 
             {
@@ -74,6 +75,13 @@ namespace RoomManagement.Api
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            // Migrate Database
+            using (IServiceScope scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                RoomManagementContext context = scope.ServiceProvider.GetRequiredService<RoomManagementContext>();
+                context.Database.Migrate();
+            }
         }
     }
 }
