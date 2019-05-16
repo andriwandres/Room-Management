@@ -1,2 +1,2 @@
 # Room-Management
-De Janic ischgay
+De Janic isch gay
