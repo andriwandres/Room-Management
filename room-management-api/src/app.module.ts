@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { RoomsModule } from './rooms/room.module';
+import { RoomModule } from './rooms/room.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventModule } from './events/event.module';
 import { ReservationModule } from './reservations/reservation.module';
+import { UserModule } from './users/user.module';
 
 @Module({
   imports: [
-    RoomsModule,
+    UserModule,
+    RoomModule,
     EventModule,
     ReservationModule,
     TypeOrmModule.forRoot()
