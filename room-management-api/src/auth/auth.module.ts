@@ -7,12 +7,14 @@ import { User } from './user.entity';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 
+export const JWT_SECRET = 'J36WN99F3vl6rCLI1smo';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secretOrKeyProvider: () => 'J36WN99F3vl6rCLI1smo',
+      secretOrKeyProvider: () => JWT_SECRET,
       signOptions: {
         expiresIn: '60m',
       }
