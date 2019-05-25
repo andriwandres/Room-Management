@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { RoomModule } from './rooms/room.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventModule } from './events/event.module';
 import { ReservationModule } from './reservations/reservation.module';
-import { UserModule } from './users/user.module';
+import { RoomModule } from './rooms/room.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    UserModule,
+    AuthModule,
     RoomModule,
     EventModule,
     ReservationModule,
