@@ -41,7 +41,7 @@ export class ReservationController {
   @ApiOkResponse({ description: 'Access was successful, resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async getReservations(): Promise<Reservation[]> {
-    return this.reservationService.getReservations();
+    return await this.reservationService.getReservations();
   }
 
   @Get('getReservation/:id')
@@ -54,7 +54,7 @@ export class ReservationController {
   @ApiNotFoundResponse({ description: 'Resource with given id could not be found' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async getReservationById(@Param('id') id: number): Promise<Reservation> {
-    const reservation = this.reservationService.getReservationById(id);
+    const reservation = await this.reservationService.getReservationById(id);
 
     if (!reservation) {
       throw new NotFoundException(`Reservation with id ${id} was not found!`);
@@ -107,6 +107,6 @@ export class ReservationController {
   @ApiNoContentResponse({ description: 'Deletion was successful, updated resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async deleteReservation(@Param('id') id: number): Promise<DeleteResult> {
-    return this.reservationService.deleteReservation(id);
+    return await this.reservationService.deleteReservation(id);
   }
 }

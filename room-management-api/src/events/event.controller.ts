@@ -27,7 +27,7 @@ export class EventController {
   @ApiOkResponse({ description: 'Access was successful, resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async getEvents(): Promise<Event[]> {
-    return this.eventService.getEvents();
+    return await this.eventService.getEvents();
   }
 
   @Get('getEvent/:id')
@@ -40,7 +40,7 @@ export class EventController {
   @ApiNotFoundResponse({ description: 'Resource with given id could not be found' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async getEventById(@Param('id') id: number): Promise<Event> {
-    const event = this.eventService.getEventById(id);
+    const event = await this.eventService.getEventById(id);
 
     if (!event) {
       throw new NotFoundException(`Event with id ${id} was not found!`);
@@ -57,7 +57,7 @@ export class EventController {
   @ApiCreatedResponse({ description: 'Resource was created, created resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async createEvent(@Body() eventDto: EventDto): Promise<Event> {
-    return this.eventService.createEvent(eventDto);
+    return await this.eventService.createEvent(eventDto);
   }
 
   @Put('updateEvent/:id')
@@ -68,7 +68,7 @@ export class EventController {
   @ApiNoContentResponse({ description: 'Update was successful, updated resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async updateEvent(@Param('id') id: number, @Body() eventDto: EventDto): Promise<UpdateResult> {
-    return this.eventService.updateEvent(id, eventDto);
+    return await this.eventService.updateEvent(id, eventDto);
   }
 
   @Delete('deleteEvent/:id')
@@ -79,6 +79,6 @@ export class EventController {
   @ApiNoContentResponse({ description: 'Deletion was successful, updated resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async deleteEvent(@Param('id') id: number): Promise<DeleteResult> {
-    return this.eventService.deleteEvent(id);
+    return await this.eventService.deleteEvent(id);
   }
 }

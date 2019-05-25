@@ -27,7 +27,7 @@ export class RoomController {
   @ApiOkResponse({ description: 'Access was successful, resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async getRooms(): Promise<Room[]> {
-    return this.roomService.getRooms();
+    return await this.roomService.getRooms();
   }
 
   @Get('getRoom/:id')
@@ -40,7 +40,7 @@ export class RoomController {
   @ApiNotFoundResponse({ description: 'Resource with given id could not be found' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async getRoomById(@Param('id') id: number): Promise<Room> {
-    const room = this.roomService.getRoomById(id);
+    const room = await this.roomService.getRoomById(id);
 
     if (!room) {
       throw new NotFoundException(`Room with id '${id}' was not found`);
@@ -57,7 +57,7 @@ export class RoomController {
   @ApiCreatedResponse({ description: 'Resource was created, created resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async createRoom(@Body() roomDto: RoomDto): Promise<Room> {
-    return this.roomService.createRoom(roomDto);
+    return await this.roomService.createRoom(roomDto);
   }
 
   @Put('updateRoom/:id')
@@ -68,7 +68,7 @@ export class RoomController {
   @ApiNoContentResponse({ description: 'Update was successful, updated resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async updateRoom(@Param('id') id: number, @Body() roomDto: RoomDto): Promise<UpdateResult> {
-    return this.roomService.updateRoom(id, roomDto);
+    return await this.roomService.updateRoom(id, roomDto);
   }
 
   @Delete('deleteRoom/:id')
@@ -79,6 +79,6 @@ export class RoomController {
   @ApiNoContentResponse({ description: 'Deletion was successful, updated resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async deleteRoom(@Param('id') id: number): Promise<DeleteResult> {
-    return this.roomService.deleteRoom(id);
+    return await this.roomService.deleteRoom(id);
   }
 }
