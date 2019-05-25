@@ -14,7 +14,7 @@ export class AuthController {
   @ApiOperation({ title: 'Checks user credentials and returns an access token' })
   @ApiOkResponse({ description: 'Access was successful, access token is returned' })
   @ApiBadRequestResponse({ description: 'User credentials were invalid' })
-  async signin(@Body() userDto: UserDto): Promise<string> {
+  async login(@Body() userDto: UserDto): Promise<string> {
     const token = await this.authService.login(userDto);
 
     if (!token) {
@@ -27,7 +27,7 @@ export class AuthController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @HttpCode(HttpStatus.BAD_REQUEST)
-  @ApiOperation({ title: 'Checks user credentials and returns an access token' })
+  @ApiOperation({ title: 'Creates a new user in the database' })
   @ApiCreatedResponse({ description: 'New user was created, access token is returned' })
   @ApiBadRequestResponse({ description: 'New email is already taken by another user' })
   async register(@Body() userDto: UserDto): Promise<User> {

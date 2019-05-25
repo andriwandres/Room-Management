@@ -1,8 +1,21 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, HttpStatus, UseGuards, NotFoundException } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { ReservationService } from './reservation.service';
 import { Reservation, ReservationDto } from './reservation.entity';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+  HttpStatus,
+  UseGuards,
+  NotFoundException
+} from '@nestjs/common';
 import {
   ApiUseTags,
   ApiBearerAuth,
@@ -11,7 +24,8 @@ import {
   ApiUnauthorizedResponse,
   ApiNotFoundResponse,
   ApiCreatedResponse,
-  ApiNoContentResponse
+  ApiNoContentResponse,
+  ApiBadRequestResponse
 } from '@nestjs/swagger';
 
 @ApiUseTags('reservations')
@@ -55,9 +69,16 @@ export class ReservationController {
   @ApiBearerAuth()
   @ApiOperation({ title: 'Creats a new reservation in the database' })
   @ApiCreatedResponse({ description: 'Resource was created, created resource is attached to the response' })
+  @ApiBadRequestResponse({ description: 'New reservation has time conflicts with existing reservation' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async createReservation(@Body() reservationDto: ReservationDto): Promise<Reservation> {
-    return this.reservationService.createReservation(reservationDto);
+    const reservation = await this.reservationService.createReservation(reservationDto);
+
+    if (!reservation) {
+      throw new BadRequestException(`New reservation has time conflict with another reservation for room with id ${reservationDto.roomId}`);
+    }
+
+    return reservation;
   }
 
   @Put('updateReservation/:id')
@@ -66,9 +87,16 @@ export class ReservationController {
   @ApiBearerAuth()
   @ApiOperation({ title: 'Updates a single reservation in the database' })
   @ApiNoContentResponse({ description: 'Update was successful, updated resource is attached to the response' })
+  @ApiBadRequestResponse({ description: 'New reservation has time conflicts with existing reservation' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async updateReservation(@Param('id') id: number, @Body() reservationDto: ReservationDto): Promise<UpdateResult> {
-    return this.reservationService.updateReservation(id, reservationDto);
+    const reservation = await this.reservationService.updateReservation(id, reservationDto);
+
+    if (!reservation) {
+      throw new BadRequestException(`New reservation has time conflict with another reservation for room with id ${reservationDto.roomId}`);
+    }
+
+    return reservation;
   }
 
   @Delete('deleteReservation/:id')

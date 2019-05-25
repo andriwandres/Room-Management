@@ -4,7 +4,7 @@
   "port": 3306,
   "username": "root",
   "password": "root",
-  "database": "room_management_nestjs",
+  "database": "room_management",
   "entities": ["src/**/**.entity{.ts,.js}"],
   "synchronize": true
 }

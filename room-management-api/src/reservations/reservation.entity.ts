@@ -1,8 +1,6 @@
-import { IsDate, IsInt } from 'class-validator';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Event } from '../events/event.entity';
-import { Room } from '../rooms/room.entity';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { IsDate, IsInt } from 'class-validator';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('reservations')
 export class Reservation {
@@ -13,10 +11,12 @@ export class Reservation {
 
   @IsInt()
   @ApiModelProperty()
+  @Column({ nullable: false })
   eventId: number;
 
   @IsInt()
   @ApiModelProperty()
+  @Column({ nullable: false })
   roomId: number;
 
   @IsDate()
@@ -28,16 +28,6 @@ export class Reservation {
   @Column({ nullable: false })
   @ApiModelProperty({ type: 'string', format: 'date-time', example: new Date().toISOString() })
   end: Date;
-
-  @OneToOne(() => Event)
-  @JoinColumn()
-  @ApiModelProperty()
-  event: Event;
-
-  @OneToOne(() => Room)
-  @JoinColumn()
-  @ApiModelProperty()
-  room: Room;
 }
 
 export class ReservationDto {
