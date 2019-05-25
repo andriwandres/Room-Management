@@ -2,8 +2,17 @@ import { Controller, Get, Param, Body, Post, Put, Delete, HttpCode, HttpStatus, 
 import { Event, EventDto } from './event.entity';
 import { EventService } from './event.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { ApiUseTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiUseTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
+  ApiNotFoundResponse,
+  ApiCreatedResponse,
+  ApiNoContentResponse
+} from '@nestjs/swagger';
 
 @ApiUseTags('events')
 @Controller('events')
@@ -13,6 +22,10 @@ export class EventController {
   @Get('getEvents')
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Returns a list of events from the database' })
+  @ApiOkResponse({ description: 'Access was successful, resource is attached to the response' })
+  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async getEvents(): Promise<Event[]> {
     return this.eventService.getEvents();
   }
@@ -21,6 +34,11 @@ export class EventController {
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.OK)
   @HttpCode(HttpStatus.NOT_FOUND)
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Returns a single event by its unique ID from the database' })
+  @ApiOkResponse({ description: 'Access was successful, resource is attached to the response' })
+  @ApiNotFoundResponse({ description: 'Resource with given id could not be found' })
+  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async getEventById(@Param('id') id: number): Promise<Event> {
     const event = this.eventService.getEventById(id);
 
@@ -34,6 +52,10 @@ export class EventController {
   @Post('createEvent')
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.CREATED)
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Creats a new event in the database' })
+  @ApiCreatedResponse({ description: 'Resource was created, created resource is attached to the response' })
+  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async createEvent(@Body() eventDto: EventDto): Promise<Event> {
     return this.eventService.createEvent(eventDto);
   }
@@ -41,6 +63,10 @@ export class EventController {
   @Put('updateEvent/:id')
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Updates a single event in the database' })
+  @ApiNoContentResponse({ description: 'Update was successful, updated resource is attached to the response' })
+  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async updateEvent(@Param('id') id: number, @Body() eventDto: EventDto): Promise<UpdateResult> {
     return this.eventService.updateEvent(id, eventDto);
   }
@@ -48,6 +74,10 @@ export class EventController {
   @Delete('deleteEvent/:id')
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Deletes a single event from the database' })
+  @ApiNoContentResponse({ description: 'Deletion was successful, updated resource is attached to the response' })
+  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async deleteEvent(@Param('id') id: number): Promise<DeleteResult> {
     return this.eventService.deleteEvent(id);
   }

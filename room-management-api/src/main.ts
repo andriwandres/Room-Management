@@ -20,6 +20,7 @@ async function bootstrap() {
     .setTitle('Room Management API')
     .setDescription('API for managing room reservations')
     .setVersion('1.0')
+    .addBearerAuth('Authorization', 'header')
     .build();
 
   const swaggerDocument = SwaggerModule.createDocument(app, options);

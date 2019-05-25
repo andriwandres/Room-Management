@@ -1,9 +1,18 @@
-import { Controller, Get, Param, Body, Post, Put, Delete, HttpCode, HttpStatus, UseGuards, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { Room, RoomDto } from './room.entity';
 import { RoomService } from './room.service';
-import { DeleteResult, UpdateResult } from 'typeorm';
-import { ApiUseTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUnauthorizedResponse,
+  ApiUseTags
+} from '@nestjs/swagger';
 
 @ApiUseTags('rooms')
 @Controller('rooms')
@@ -13,6 +22,10 @@ export class RoomController {
   @Get('getRooms')
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Returns a list of rooms from the database' })
+  @ApiOkResponse({ description: 'Access was successful, resource is attached to the response' })
+  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async getRooms(): Promise<Room[]> {
     return this.roomService.getRooms();
   }
@@ -21,6 +34,11 @@ export class RoomController {
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.OK)
   @HttpCode(HttpStatus.NOT_FOUND)
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Returns a single room by its unique ID from the database' })
+  @ApiOkResponse({ description: 'Access was successful, resource is attached to the response' })
+  @ApiNotFoundResponse({ description: 'Resource with given id could not be found' })
+  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async getRoomById(@Param('id') id: number): Promise<Room> {
     const room = this.roomService.getRoomById(id);
 
@@ -34,6 +52,10 @@ export class RoomController {
   @Post('createRoom')
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.CREATED)
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Creats a new room in the database' })
+  @ApiCreatedResponse({ description: 'Resource was created, created resource is attached to the response' })
+  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async createRoom(@Body() roomDto: RoomDto): Promise<Room> {
     return this.roomService.createRoom(roomDto);
   }
@@ -41,6 +63,10 @@ export class RoomController {
   @Put('updateRoom/:id')
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Updates a single room in the database' })
+  @ApiNoContentResponse({ description: 'Update was successful, updated resource is attached to the response' })
+  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async updateRoom(@Param('id') id: number, @Body() roomDto: RoomDto): Promise<UpdateResult> {
     return this.roomService.updateRoom(id, roomDto);
   }
@@ -48,6 +74,10 @@ export class RoomController {
   @Delete('deleteRoom/:id')
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Deletes a single room from the database' })
+  @ApiNoContentResponse({ description: 'Deletion was successful, updated resource is attached to the response' })
+  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
   async deleteRoom(@Param('id') id: number): Promise<DeleteResult> {
     return this.roomService.deleteRoom(id);
   }
