@@ -16,7 +16,9 @@ export class ReservationService {
   }
 
   async getReservationById(id: number): Promise<Reservation> {
-    return await this.repository.findOne(id);
+    return await this.repository.findOne(id, {
+      relations: ['room', 'event']
+    });
   }
 
   async createReservation(reservationDto: ReservationDto): Promise<Reservation> {
