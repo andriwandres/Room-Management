@@ -16,7 +16,9 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   });
 
+
   const options = new DocumentBuilder()
+    .setBasePath('api')
     .setTitle('Room Management API')
     .setDescription('API for managing room reservations')
     .setVersion('1.0')
