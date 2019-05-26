@@ -26,6 +26,7 @@ async function bootstrap() {
   const swaggerDocument = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, swaggerDocument);
 
+  app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(3000);
