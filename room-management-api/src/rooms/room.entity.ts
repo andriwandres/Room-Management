@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IsString, MaxLength, IsInt, IsOptional } from 'class-validator';
 import { ApiModelPropertyOptional, ApiModelProperty } from '@nestjs/swagger';
+import { Reservation } from 'src/reservations/reservation.entity';
 
 @Entity('rooms')
 export class Room {
@@ -20,6 +21,9 @@ export class Room {
   @Column({ nullable: true })
   @ApiModelPropertyOptional()
   description: string;
+
+  @OneToMany(() => Reservation, reservation => reservation.event)
+  reservations: Reservation[];
 }
 
 export class RoomDto {

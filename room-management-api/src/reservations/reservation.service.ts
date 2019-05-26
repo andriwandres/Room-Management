@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult, DeleteResult, MoreThanOrEqual, LessThanOrEqual, Between, Not } from 'typeorm';
 import { Reservation, ReservationDto } from './reservation.entity';
+import { Room } from 'src/rooms/room.entity';
+import { Event } from 'src/events/event.entity';
 
 @Injectable()
 export class ReservationService {
   constructor(@InjectRepository(Reservation) private readonly repository: Repository<Reservation>) {}
 
   async getReservations(): Promise<Reservation[]> {
-    return await this.repository.find();
+    return await this.repository.find({
+      relations: ['room', 'event']
+    });
   }
 
   async getReservationById(id: number): Promise<Reservation> {
@@ -22,7 +26,14 @@ export class ReservationService {
       return null;
     }
 
-    return await this.repository.save(reservationDto);
+    const reservation: Partial<Reservation> = {
+      start: reservationDto.start,
+      end: reservationDto.end,
+      room: { roomId: reservationDto.roomId } as Room,
+      event: { eventId: reservationDto.eventId } as Event
+    };
+
+    return await this.repository.save(reservation);
   }
 
   async updateReservation(id: number, reservationDto: ReservationDto): Promise<UpdateResult> {
@@ -32,7 +43,14 @@ export class ReservationService {
       return null;
     }
 
-    return await this.repository.update(id, reservationDto);
+    const reservation: Partial<Reservation> = {
+      start: reservationDto.start,
+      end: reservationDto.end,
+      room: { roomId: reservationDto.roomId } as Room,
+      event: { eventId: reservationDto.eventId } as Event
+    };
+
+    return await this.repository.update(id, reservation);
   }
 
   async deleteReservation(id: number): Promise<DeleteResult> {
@@ -45,7 +63,7 @@ export class ReservationService {
         // Case 1: Reservation starts and ends during an existing reservation
         {
           reservationId: Not(reservationId),
-          roomId: reservationDto.roomId,
+          room: { roomId: reservationDto.roomId },
           start: MoreThanOrEqual(reservationDto.start),
           end: LessThanOrEqual(reservationDto.end)
         },
@@ -53,14 +71,14 @@ export class ReservationService {
         // Case 2: Reservation ends during an existing reservation
         {
           reservationId: Not(reservationId),
-          roomId: reservationDto.roomId,
+          room: { roomId: reservationDto.roomId },
           start: Between(reservationDto.start, reservationDto.end)
         },
 
         // Case 3: Reservation starts during an existing reservation, but exeeds the end
         {
           reservationId: Not(reservationId),
-          roomId: reservationDto.roomId,
+          room: { roomId: reservationDto.roomId },
           end: Between(reservationDto.start, reservationDto.end)
         }
       ]
