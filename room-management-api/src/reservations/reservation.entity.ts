@@ -29,21 +29,3 @@ export class Reservation {
   @ApiModelProperty({ type: 'string', format: 'date-time', example: new Date().toISOString() })
   end: Date;
 }
-
-export class ReservationDto {
-  @IsInt()
-  @ApiModelProperty()
-  eventId: number;
-
-  @IsInt()
-  @ApiModelProperty()
-  roomId: number;
-
-  @IsDate()
-  @ApiModelProperty({ type: Date })
-  start: Date;
-
-  @IsDate()
-  @ApiModelProperty({ type: Date })
-  end: Date;
-}

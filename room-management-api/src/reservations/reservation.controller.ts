@@ -1,6 +1,7 @@
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { ReservationService } from './reservation.service';
-import { Reservation, ReservationDto } from './reservation.entity';
+import { ReservationDto } from './reservation.dto';
+import { Reservation } from './reservation.entity';
 import { AuthGuard } from '@nestjs/passport';
 import {
   BadRequestException,

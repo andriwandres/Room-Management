@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { Room, RoomDto } from './room.entity';
+import { RoomDto } from './room.dto';
+import { Room } from './room.entity';
 import { RoomService } from './room.service';
 import {
   ApiBearerAuth,

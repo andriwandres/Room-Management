@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Body, Post, Put, Delete, HttpCode, HttpStatus, UseGuards, NotFoundException } from '@nestjs/common';
-import { Event, EventDto } from './event.entity';
+import { EventDto } from './event.dto';
+import { Event } from './event.entity';
 import { EventService } from './event.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';

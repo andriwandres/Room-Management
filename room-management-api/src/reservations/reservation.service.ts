@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult, DeleteResult, MoreThanOrEqual, LessThanOrEqual, Between, Not } from 'typeorm';
-import { Reservation, ReservationDto } from './reservation.entity';
+import { ReservationDto } from './reservation.dto';
+import { Reservation } from './reservation.entity';
 import { Room } from 'src/rooms/room.entity';
 import { Event } from 'src/events/event.entity';
 

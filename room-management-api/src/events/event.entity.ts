@@ -1,7 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { IsString, MaxLength, IsInt, IsOptional } from 'class-validator';
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
 import { Reservation } from 'src/reservations/reservation.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('events')
 export class Event {
@@ -29,20 +29,4 @@ export class Event {
 
   @OneToMany(() => Reservation, reservation => reservation.event)
   reservations: Reservation[];
-}
-
-export class EventDto {
-  @IsString()
-  @MaxLength(45)
-  @ApiModelProperty()
-  title: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiModelPropertyOptional()
-  description: string;
-
-  @IsString()
-  @ApiModelProperty()
-  organizer: string;
 }

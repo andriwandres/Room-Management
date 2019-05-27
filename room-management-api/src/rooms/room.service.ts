@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
-import { Room, RoomDto } from './room.entity';
+import { RoomDto } from './room.dto';
+import { Room } from './room.entity';
 
 @Injectable()
 export class RoomService {

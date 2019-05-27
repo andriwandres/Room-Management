@@ -20,14 +20,3 @@ export class User {
   @ApiModelProperty()
   password: string;
 }
-
-export class UserDto {
-  @IsEmail()
-  @IsString()
-  @ApiModelProperty()
-  email: string;
-
-  @IsString()
-  @ApiModelProperty()
-  password: string;
-}

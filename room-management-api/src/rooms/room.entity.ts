@@ -25,15 +25,3 @@ export class Room {
   @OneToMany(() => Reservation, reservation => reservation.event)
   reservations: Reservation[];
 }
-
-export class RoomDto {
-  @IsString()
-  @MaxLength(45)
-  @ApiModelProperty()
-  name: string;
-
-  @IsOptional()
-  @IsString()
-  @ApiModelPropertyOptional()
-  description: string;
-}

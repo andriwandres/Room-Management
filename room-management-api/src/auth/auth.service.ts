@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserDto } from '../auth/user.entity';
-import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+import { User } from '../auth/user.entity';
+import { UserDto } from './user.dto';
 
 const SALT_ROUNDS = 10;
 
