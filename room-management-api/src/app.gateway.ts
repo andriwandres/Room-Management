@@ -3,15 +3,15 @@ import { Server } from 'socket.io';
 
 export enum GatewayEvents {
   CREATE_ROOM = 'create_room',
-  CREATE_EVENT = 'create_event',
-  CREATE_RESERVATION = 'create_reservation',
-
   UPDATE_ROOM = 'update_room',
-  UPDATE_EVENT = 'update_event',
-  UPDATE_RESERVATION = 'update_reservation',
-
   DELETE_ROOM = 'delete_room',
+
+  CREATE_EVENT = 'create_event',
+  UPDATE_EVENT = 'update_event',
   DELETE_EVENT = 'delete_event',
+
+  CREATE_RESERVATION = 'create_reservation',
+  UPDATE_RESERVATION = 'update_reservation',
   DELETE_RESERVATION = 'delete_reservation'
 }
 
