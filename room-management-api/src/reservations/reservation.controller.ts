@@ -1,4 +1,4 @@
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { ReservationService } from './reservation.service';
 import { ReservationDto } from './reservation.dto';
 import { Reservation } from './reservation.entity';
@@ -90,7 +90,7 @@ export class ReservationController {
   @ApiNoContentResponse({ description: 'Update was successful, updated resource is attached to the response' })
   @ApiBadRequestResponse({ description: 'New reservation has time conflicts with existing reservation' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
-  async updateReservation(@Param('id') id: number, @Body() reservationDto: ReservationDto): Promise<UpdateResult> {
+  async updateReservation(@Param('id') id: number, @Body() reservationDto: ReservationDto): Promise<Reservation> {
     const reservation = await this.reservationService.updateReservation(id, reservationDto);
 
     if (!reservation) {

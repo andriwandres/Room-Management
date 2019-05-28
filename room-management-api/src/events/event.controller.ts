@@ -2,7 +2,7 @@ import { Controller, Get, Param, Body, Post, Put, Delete, HttpCode, HttpStatus, 
 import { EventDto } from './event.dto';
 import { Event } from './event.entity';
 import { EventService } from './event.service';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiUseTags,
@@ -68,7 +68,7 @@ export class EventController {
   @ApiOperation({ title: 'Updates a single event in the database' })
   @ApiNoContentResponse({ description: 'Update was successful, updated resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
-  async updateEvent(@Param('id') id: number, @Body() eventDto: EventDto): Promise<UpdateResult> {
+  async updateEvent(@Param('id') id: number, @Body() eventDto: EventDto): Promise<Event> {
     return await this.eventService.updateEvent(id, eventDto);
   }
 

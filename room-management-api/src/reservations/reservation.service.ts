@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult, DeleteResult, MoreThanOrEqual, LessThanOrEqual, Between, Not } from 'typeorm';
+import { Repository, DeleteResult, MoreThanOrEqual, LessThanOrEqual, Between, Not } from 'typeorm';
 import { ReservationDto } from './reservation.dto';
 import { Reservation } from './reservation.entity';
 import { Room } from 'src/rooms/room.entity';
 import { Event } from 'src/events/event.entity';
+import { AppGateway, GatewayEvents } from 'src/app.gateway';
 
 @Injectable()
 export class ReservationService {
-  constructor(@InjectRepository(Reservation) private readonly repository: Repository<Reservation>) {}
+  constructor(
+    private readonly gateway: AppGateway,
+    @InjectRepository(Reservation) private readonly repository: Repository<Reservation>
+  ) {}
 
   async getReservations(): Promise<Reservation[]> {
     return await this.repository.find({
@@ -36,10 +40,16 @@ export class ReservationService {
       event: { eventId: reservationDto.eventId } as Event
     };
 
-    return await this.repository.save(reservation);
+    const added = await this.repository.save(reservation);
+
+    if (added) {
+      this.gateway.server.emit(GatewayEvents.CREATE_RESERVATION, added);
+    }
+
+    return added;
   }
 
-  async updateReservation(id: number, reservationDto: ReservationDto): Promise<UpdateResult> {
+  async updateReservation(id: number, reservationDto: ReservationDto): Promise<Reservation> {
     const hasConflicts = await this.hasConflicts(reservationDto, id);
 
     if (!hasConflicts) {
@@ -53,11 +63,24 @@ export class ReservationService {
       event: { eventId: reservationDto.eventId } as Event
     };
 
-    return await this.repository.update(id, reservation);
+    await this.repository.update(id, reservation);
+    const updated = await this.getReservationById(id);
+
+    if (updated) {
+      this.gateway.server.emit(GatewayEvents.UPDATE_RESERVATION, updated);
+    }
+
+    return updated;
   }
 
   async deleteReservation(id: number): Promise<DeleteResult> {
-    return await this.repository.delete(id);
+    const result = await this.repository.delete(id);
+
+    if (result.affected) {
+      this.gateway.server.emit(GatewayEvents.DELETE_RESERVATION, id);
+    }
+
+    return result;
   }
 
   async hasConflicts(reservationDto: ReservationDto, reservationId = 0): Promise<boolean> {

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { RoomDto } from './room.dto';
 import { Room } from './room.entity';
 import { RoomService } from './room.service';
@@ -68,7 +68,7 @@ export class RoomController {
   @ApiOperation({ title: 'Updates a single room in the database' })
   @ApiNoContentResponse({ description: 'Update was successful, updated resource is attached to the response' })
   @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
-  async updateRoom(@Param('id') id: number, @Body() roomDto: RoomDto): Promise<UpdateResult> {
+  async updateRoom(@Param('id') id: number, @Body() roomDto: RoomDto): Promise<Room> {
     return await this.roomService.updateRoom(id, roomDto);
   }
 
