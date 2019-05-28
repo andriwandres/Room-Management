@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, Like } from 'typeorm';
 import { EventDto } from './event.dto';
 import { Event } from './event.entity';
 import { AppGateway, GatewayEvents } from 'src/app.gateway';
@@ -12,8 +12,12 @@ export class EventService {
     @InjectRepository(Event) private readonly repository: Repository<Event>
   ) {}
 
-  async getEvents(): Promise<Event[]> {
-    return await this.repository.find();
+  async getEvents(filter: string): Promise<Event[]> {
+    filter = !!filter ? filter.trim().toLowerCase() : '';
+
+    return await this.repository.find({
+      title: Like(`%${filter}%`)
+    });
   }
 
   async getEventById(id: number): Promise<Event> {
