@@ -1,4 +1,4 @@
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { ReservationService } from './reservation.service';
 import { ReservationDto } from './reservation.dto';
 import { Reservation } from './reservation.entity';
@@ -26,7 +26,9 @@ import {
   ApiNotFoundResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
-  ApiBadRequestResponse
+  ApiBadRequestResponse,
+  ApiImplicitParam,
+  ApiImplicitBody
 } from '@nestjs/swagger';
 
 @ApiUseTags('reservations')
@@ -38,9 +40,15 @@ export class ReservationController {
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
-  @ApiOperation({ title: 'Returns a list of reservations from the database' })
-  @ApiOkResponse({ description: 'Access was successful, resource is attached to the response' })
-  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
+  @ApiOperation({
+    title: 'Returns a list of reservations from the database'
+  })
+  @ApiOkResponse({
+    description: 'Access was successful, resource is attached to the response'
+  })
+  @ApiUnauthorizedResponse({
+    description: 'No or invalid access token was sent'
+  })
   async getReservations(): Promise<Reservation[]> {
     return await this.reservationService.getReservations();
   }
@@ -48,12 +56,24 @@ export class ReservationController {
   @Get('getReservation/:id')
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.OK)
-  @HttpCode(HttpStatus.NOT_FOUND)
   @ApiBearerAuth()
-  @ApiOperation({ title: 'Returns a single reservation by its unique ID from the database' })
-  @ApiOkResponse({ description: 'Access was successful, resource is attached to the response' })
-  @ApiNotFoundResponse({ description: 'Resource with given id could not be found' })
-  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
+  @ApiOperation({
+    title: 'Returns a single reservation by its unique ID from the database'
+  })
+  @ApiOkResponse({
+    description: 'Access was successful, resource is attached to the response'
+  })
+  @ApiNotFoundResponse({
+    description: 'Resource with given id could not be found'
+  })
+  @ApiUnauthorizedResponse({
+    description: 'No or invalid access token was sent'
+  })
+  @ApiImplicitParam({
+    name: 'id',
+    required: true,
+    description: 'Id of reservation to get'
+  })
   async getReservationById(@Param('id') id: number): Promise<Reservation> {
     const reservation = await this.reservationService.getReservationById(id);
 
@@ -68,11 +88,25 @@ export class ReservationController {
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.CREATED)
   @ApiBearerAuth()
-  @ApiOperation({ title: 'Creats a new reservation in the database' })
-  @ApiCreatedResponse({ description: 'Resource was created, created resource is attached to the response' })
-  @ApiBadRequestResponse({ description: 'New reservation has time conflicts with existing reservation' })
-  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
-  async createReservation(@Body() reservationDto: ReservationDto): Promise<Reservation> {
+  @ApiOperation({
+    title: 'Creats a new reservation in the database'
+  })
+  @ApiCreatedResponse({
+    description: 'Resource was created, created resource is attached to the response'
+  })
+  @ApiBadRequestResponse({
+    description: 'New reservation has time conflicts with existing reservation'
+  })
+  @ApiUnauthorizedResponse({
+    description: 'No or invalid access token was sent'
+  })
+  @ApiImplicitBody({
+    name: 'reservation',
+    required: true,
+    description: 'Reservation to create',
+    type: ReservationDto
+  })
+  async createReservation(@Body('reservation') reservationDto: ReservationDto): Promise<Reservation> {
     const reservation = await this.reservationService.createReservation(reservationDto);
 
     if (!reservation) {
@@ -86,11 +120,30 @@ export class ReservationController {
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
-  @ApiOperation({ title: 'Updates a single reservation in the database' })
-  @ApiNoContentResponse({ description: 'Update was successful, updated resource is attached to the response' })
-  @ApiBadRequestResponse({ description: 'New reservation has time conflicts with existing reservation' })
-  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
-  async updateReservation(@Param('id') id: number, @Body() reservationDto: ReservationDto): Promise<UpdateResult> {
+  @ApiOperation({
+    title: 'Updates a single reservation in the database'
+  })
+  @ApiNoContentResponse({
+    description: 'Update was successful, updated resource is attached to the response'
+  })
+  @ApiBadRequestResponse({
+    description: 'New reservation has time conflicts with existing reservation'
+  })
+  @ApiUnauthorizedResponse({
+    description: 'No or invalid access token was sent'
+  })
+  @ApiImplicitParam({
+    name: 'id',
+    required: true,
+    description: 'Id of reservation to update'
+  })
+  @ApiImplicitBody({
+    name: 'reservation',
+    required: true,
+    description: 'Reservation to update',
+    type: ReservationDto
+  })
+  async updateReservation(@Param('id') id: number, @Body('reservation') reservationDto: ReservationDto): Promise<Reservation> {
     const reservation = await this.reservationService.updateReservation(id, reservationDto);
 
     if (!reservation) {
@@ -104,9 +157,20 @@ export class ReservationController {
   @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
-  @ApiOperation({ title: 'Deletes a single reservation from the database' })
-  @ApiNoContentResponse({ description: 'Deletion was successful, updated resource is attached to the response' })
-  @ApiUnauthorizedResponse({ description: 'No or invalid access token was sent' })
+  @ApiOperation({
+    title: 'Deletes a single reservation from the database'
+  })
+  @ApiNoContentResponse({
+    description: 'Deletion was successful, updated resource is attached to the response'
+  })
+  @ApiUnauthorizedResponse({
+    description: 'No or invalid access token was sent'
+  })
+  @ApiImplicitParam({
+    name: 'id',
+    required: true,
+    description: 'Id of reservation to delete'
+  })
   async deleteReservation(@Param('id') id: number): Promise<DeleteResult> {
     return await this.reservationService.deleteReservation(id);
   }
