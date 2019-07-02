@@ -20,6 +20,10 @@ export class AuthService {
   }
 
   async login(userDto: UserDto): Promise<string> {
+    if (!userDto) {
+      return null;
+    }
+
     const { email, password } = userDto;
     const user = await this.getUserByEmail(email);
 
@@ -37,6 +41,10 @@ export class AuthService {
   }
 
   async register(userDto: UserDto): Promise<User> {
+    if (!userDto) {
+      return null;
+    }
+
     const { email, password } = userDto;
     const emailExists = !!(await this.repository.findOne({ email }));
 

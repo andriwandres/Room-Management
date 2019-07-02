@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, Header } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiUseTags, ApiImplicitBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { UserDto } from './user.dto';
@@ -21,13 +21,7 @@ export class AuthController {
   @ApiBadRequestResponse({
     description: 'User credentials were invalid'
   })
-  @ApiImplicitBody({
-    name: 'credentials',
-    required: true,
-    description: 'User object with login credentials',
-    type: UserDto
-  })
-  async login(@Body('credentials') userDto: UserDto): Promise<string> {
+  async login(@Body() userDto: UserDto): Promise<string> {
     const token = await this.authService.login(userDto);
 
     if (!token) {
@@ -49,13 +43,7 @@ export class AuthController {
   @ApiBadRequestResponse({
     description: 'New email is already taken by another user'
   })
-  @ApiImplicitBody({
-    name: 'user',
-    required: true,
-    description: 'User object to register in the database',
-    type: UserDto
-  })
-  async register(@Body('user') userDto: UserDto): Promise<User> {
+  async register(@Body() userDto: UserDto): Promise<User> {
     const user = await this.authService.register(userDto);
 
     if (!user) {
