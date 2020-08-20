@@ -28,7 +28,7 @@
     "@nestjs/swagger": "^3.0.2",
     "@nestjs/typeorm": "^6.1.1",
     "@nestjs/websockets": "^6.2.4",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "class-transformer": "^0.2.2",
     "class-validator": "^0.9.1",
     "fastify-swagger": "^2.4.0",
